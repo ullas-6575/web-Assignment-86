@@ -1,0 +1,94 @@
+/* Cards & Widgets */
+.new-idea-section,
+.idea-card,
+.sidebar-widget {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+/* Hover effect on cards */
+.new-idea-section:hover,
+.idea-card:hover,
+.sidebar-widget:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.new-idea-section h2,
+.idea-card h3,
+.sidebar-widget h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.member-author {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-bottom: 10px;
+}
+
+/* Inputs and Buttons */
+input,
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+textarea {
+    height: 80px;
+    resize: vertical;
+}
+
+.post-btn {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.post-btn:hover {
+    background-color: #219150;
+}
+
+/* Sidebar lists */
+.sidebar-widget ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-widget li {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.sidebar-widget li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Replies */
+.replies {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 4px;
+}

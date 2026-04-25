@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events - The Innovators</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="logo">The Innovators</div>
+        <ul class="nav-links">
+            <li><a href="index.html#home">Home</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="discussions.html">Discussions</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><button class="join-btn" onclick="joinClub()">Join Club</button></li>
+            <li><button class="sign-in-btn" onclick="signIn()">Sign In</button></li>
+        </ul>
+    </nav>
+
+    <div class="events-page">
+
+        <h1 class="events-page-title">Club Events</h1>
+
+        <!-- Upcoming / Future Events -->
+        <section class="events-section" id="future-events">
+            <h2 class="events-section-title"> Upcoming Events</h2>
+            <div class="events-grid">
+                <div class="event-card future">
+                    <div class="event-date">Friday, May 2 — 8:00 PM</div>
+                    <h3>Monthly Meetup</h3>
+                    <p>Join us for our monthly social mixer! Meet new members, share ideas, and have fun.</p>
+                    <span class="event-badge upcoming">Upcoming</span>
+                </div>
+                <div class="event-card future">
+                    <div class="event-date">Sunday, May 4 — 10:00 AM</div>
+                    <h3>Pitch Review Session</h3>
+                    <p>Members will present their ideas to the club and receive constructive feedback from peers.</p>
+                    <span class="event-badge upcoming">Upcoming</span>
+                </div>
+                <div class="event-card future">
+                    <div class="event-date">Saturday, May 10 — 2:00 PM</div>
+                    <h3>Intro to Web Development</h3>
+                    <p>A beginner-friendly workshop covering the basics of HTML, CSS, and JavaScript.</p>
+                    <span class="event-badge upcoming">Upcoming</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent / Past Events -->
+        <section class="events-section" id="recent-events">
+            <h2 class="events-section-title"> Recent Events</h2>
+            <div class="events-grid">
+                <div class="event-card past">
+                    <div class="event-date">Friday, April 18 — 8:00 PM</div>
+                    <h3>Club Launch Celebration</h3>
+                    <p>We officially kicked off The Innovators club with a fantastic welcome night for all founding
+                        members.</p>
+                    <span class="event-badge past">Completed</span>
+                </div>
+                <div class="event-card past">
+                    <div class="event-date">Sunday, April 13 — 11:00 AM</div>
+                    <h3>Idea Brainstorm Day</h3>
+                    <p>Members gathered to brainstorm and vote on the first batch of ideas to be pitched to the club.
+                    </p>
+                    <span class="event-badge past">Completed</span>
+                </div>
+                <div class="event-card past">
+                    <div class="event-date">Saturday, April 5 — 3:00 PM</div>
+                    <h3>HTML & CSS Workshop</h3>
+                    <p>Our first hands-on coding workshop helped 10+ members build their very first webpage from
+                        scratch.</p>
+                    <span class="event-badge past">Completed</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

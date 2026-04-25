@@ -118,9 +118,7 @@ html {
 }
 
 .text-highlight {
-    background: linear-gradient(to right, #38bdf8, #8b5cf6, #ec4899);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: white;
 }
 
 .hero-box h3 {
@@ -151,6 +149,127 @@ html {
 
 .club-sidebar {
     flex: 3;
+}
+
+/* Combined Members & Events sidebar on home page */
+.club-sidebar-combined {
+    max-width: 400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* About Us section at bottom of home page */
+.about-section {
+    background-color: #2c3e50;
+    color: #f8fafc;
+    padding: 60px 20px;
+    margin-top: 40px;
+    text-align: center;
+}
+
+.about-box {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.about-box h2 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    color: #f1c40f;
+}
+
+.about-box p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 12px;
+}
+
+/* ====== Events Page Styles ====== */
+.events-page {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.events-page-title {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.events-section {
+    margin-bottom: 50px;
+}
+
+.events-section-title {
+    font-size: 1.4rem;
+    color: #2c3e50;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.event-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+}
+
+.event-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.event-card h3 {
+    margin: 10px 0 8px;
+    color: #2c3e50;
+}
+
+.event-card p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.event-date {
+    font-size: 0.82rem;
+    color: #7f8c8d;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.event-badge {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.event-badge.upcoming {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    border: 1px solid #27ae60;
+}
+
+.event-badge.past {
+    background-color: #f0f0f0;
+    color: #7f8c8d;
+    border: 1px solid #bbb;
 }
 
 /* Cards & Widgets */
