@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("location: login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,15 +19,13 @@
     <nav class="navbar">
         <div class="logo">The Innovators</div>
         <ul class="nav-links">
-            <li><a href="index.html#home">Home</a></li>
-            <li><a href="index.html#about">About Us</a></li>
-            <li><a href="discussions.html">Discussions</a></li>
-            <li><a href="events.html">Events</a></li>
-            <li><button class="join-btn" id="nav-join-btn" onclick="joinClub()">Join Club</button></li>
-            <li><button class="sign-in-btn" id="nav-signin-btn" onclick="signIn()">Sign In</button></li>
-            <li id="nav-user-info" style="display: none; align-items: center; gap: 10px;">
-                <span id="nav-user-name" class="nav-username"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
+            <li><a href="index.php#home">Home</a></li>
+            <li><a href="index.php#about">About Us</a></li>
+            <li><a href="discussions.php">Discussions</a></li>
+            <li><a href="events.php">Events</a></li>
+            <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
+                <span id="nav-user-name" class="nav-username"><?php echo "Welcome, " . $_SESSION['fullname']; ?></span>
+                <a href="logout.php"><button class="logout-btn">Logout</button></a>
             </li>
         </ul>
     </nav>

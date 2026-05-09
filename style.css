@@ -79,6 +79,30 @@ html {
     transform: translateY(-2px);
 }
 
+.nav-username {
+    color: #f1c40f;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.logout-btn {
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 1px solid #e74c3c;
+    background-color: transparent;
+    color: #e74c3c;
+    font-size: 0.85rem;
+    transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.logout-btn:hover {
+    background-color: #e74c3c;
+    color: white;
+    transform: translateY(-2px);
+}
+
 /* Home / Header Section (Advanced Design Preserved) */
 .header-section {
     background: linear-gradient(135deg, #1e293b, #0f172a);
