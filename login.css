@@ -1,3 +1,8 @@
+/* =====================================================
+   The Innovators – login.css
+   Auth page styles with smooth box transitions
+   ===================================================== */
+
 .auth-container {
     display: flex;
     justify-content: center;
@@ -5,6 +10,7 @@
     min-height: 80vh;
 }
 
+/* ── Box base ── */
 .auth-box {
     background: white;
     padding: 30px;
@@ -36,6 +42,7 @@
     text-decoration: underline;
 }
 
+/* ── Submit button ── */
 .auth-submit-btn {
     background-color: #2c3e50;
     color: white;
@@ -46,13 +53,19 @@
     font-size: 1rem;
     cursor: pointer;
     margin-top: 10px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.15s;
 }
 
 .auth-submit-btn:hover {
     background-color: #1a252f;
+    transform: translateY(-1px);
 }
 
+.auth-submit-btn:active {
+    transform: translateY(0);
+}
+
+/* ── Message banner ── */
 .auth-message {
     display: none;
     padding: 10px;
@@ -64,3 +77,24 @@
     background-color: #f8f9fa;
     border: 1px solid #ddd;
 }
+
+/* ── Fade-in animation for box toggle ── */
+@keyframes authFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes authFadeOut {
+    from { opacity: 1; transform: translateY(0);    }
+    to   { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes msgPop {
+    0%   { transform: scale(0.95); opacity: 0; }
+    60%  { transform: scale(1.02); }
+    100% { transform: scale(1);    opacity: 1; }
+}
+
+.auth-fade-in  { animation: authFadeIn  0.28s ease forwards; }
+.auth-fade-out { animation: authFadeOut 0.18s ease forwards; }
+.msg-pop       { animation: msgPop      0.35s ease forwards; }

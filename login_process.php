@@ -1,42 +1,49 @@
 <?php
+// login_process.php — Authenticates user against MySQL database
+// FIX: added mysqli_real_escape_string() to prevent SQL injection
+
 session_start();
 include 'db.php';
 
-if (isset($_POST['submit'])) {
-    $identifier = trim($_POST['identifier']); // username or email
-    $password   = $_POST['password'];
+if (!isset($_POST['submit'])) {
+    header("location: login.php");
+    exit();
+}
 
-    // Fetch user by username OR email
-    $q   = "SELECT * FROM users WHERE username='$identifier' OR email='$identifier'";
-    $res = mysqli_query($conn, $q);
+$identifier = mysqli_real_escape_string($conn, trim($_POST['identifier']));
+$password   = $_POST['password'];
 
-    if (mysqli_num_rows($res) == 1) {
-        $user = mysqli_fetch_assoc($res);
+// Fetch user by username OR email
+$q   = "SELECT * FROM users WHERE username='$identifier' OR email='$identifier'";
+$res = mysqli_query($conn, $q);
 
-        // Verify hashed password
-        if (password_verify($password, $user['password'])) {
+if (mysqli_num_rows($res) == 1) {
+    $user = mysqli_fetch_assoc($res);
 
-            // ── SESSION ──
-            $_SESSION['user_id']  = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['fullname'] = $user['fullname'];
+    if (password_verify($password, $user['password'])) {
 
-            // ── COOKIE ( "remember me") ──
-            if (isset($_POST['remember'])) {
-                setcookie('username', $user['username'], time() + (7 * 24 * 3600), '/'); // 7 days
-            }
+        // ── SESSION ──
+        $_SESSION['user_id']  = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['fullname'] = $user['fullname'];
 
-            header("location: index.php");  // redirect to home after login
-            exit();
-        } else {
-            header("location: login.php?error=invalid");
-            exit();
+        // ── COOKIE ("remember me") ──
+        if (isset($_POST['remember'])) {
+            setcookie('username', $user['username'], time() + (7 * 24 * 3600), '/');
         }
+
+        mysqli_close($conn);
+        header("location: index.php");
+        exit();
+
     } else {
-        header("location: login.php?error=notfound");
+        mysqli_close($conn);
+        header("location: login.php?error=invalid");
         exit();
     }
-
+} else {
     mysqli_close($conn);
+    header("location: login.php?error=notfound");
+    exit();
 }
 ?>

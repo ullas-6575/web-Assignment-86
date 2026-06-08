@@ -390,3 +390,15 @@ textarea {
     padding: 10px;
     border-radius: 4px;
 }
+
+/* =====================================================
+   Page-load fade-in (added for smooth navigation feel)
+   ===================================================== */
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0);   }
+}
+
+body {
+    animation: pageFadeIn 0.3s ease forwards;
+}

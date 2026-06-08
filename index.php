@@ -1,9 +1,8 @@
 <?php
+// FIX: index.php is now PUBLIC — no forced redirect.
+// It shows Join/Sign In buttons for guests, and username+Logout for logged-in members.
 session_start();
-if (!isset($_SESSION['username'])) {
-    header("location: login.php");
-    exit();
-}
+$isLoggedIn = isset($_SESSION['username']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,12 +21,19 @@ if (!isset($_SESSION['username'])) {
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About Us</a></li>
-            <li><a href="discussions.php">Discussions</a></li>
-            <li><a href="events.php">Events</a></li>
-            <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
-                <span id="nav-user-name" class="nav-username"><?php echo "Welcome, " . $_SESSION['fullname']; ?></span>
-                <a href="logout.php"><button class="logout-btn">Logout</button></a>
-            </li>
+            <?php if ($isLoggedIn): ?>
+                <li><a href="discussions.php">Discussions</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li id="nav-user-info" style="display:flex;align-items:center;gap:10px;">
+                    <span class="nav-username">Welcome, <?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
+                    <a href="logout.php"><button class="logout-btn">Logout</button></a>
+                </li>
+            <?php else: ?>
+                <li><a href="discussions.html">Discussions</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><button class="join-btn"   onclick="joinClub()">Join Club</button></li>
+                <li><button class="sign-in-btn" onclick="signIn()">Sign In</button></li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -45,8 +51,7 @@ if (!isset($_SESSION['username'])) {
         </div>
     </header>
 
-    <!-- Aside layout -->
-    <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px; display: flex; gap: 20px;">
+    <div style="max-width:1000px;margin:40px auto;padding:0 20px;display:flex;gap:20px;">
         <div class="sidebar-widget">
             <h3>Upcoming Club Events</h3>
             <ul>
@@ -64,7 +69,6 @@ if (!isset($_SESSION['username'])) {
         </aside>
     </div>
 
-    <!-- About Us Section at bottom -->
     <section class="about-section" id="about">
         <div class="about-box">
             <h2>About Us</h2>
