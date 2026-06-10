@@ -33,8 +33,8 @@
 }
 
 /* Inputs and Buttons */
-input,
-textarea {
+.discussion-area input,
+.discussion-area textarea {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
@@ -44,7 +44,7 @@ textarea {
     font-family: inherit;
 }
 
-textarea {
+.discussion-area textarea {
     height: 80px;
     resize: vertical;
 }
@@ -83,12 +83,120 @@ textarea {
     padding-bottom: 0;
 }
 
-/* Replies */
+
+.idea-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Timestamp */
+.idea-timestamp,
+.reply-timestamp {
+    display: block;
+    font-size: 0.75rem;
+    color: #95a5a6;
+    margin-top: 6px;
+}
+
+/* Empty board state */
+.empty-board {
+    text-align: center;
+    color: #95a5a6;
+    font-style: italic;
+    padding: 30px 0;
+}
+
+/*    Delete Button (moderator / president only)   */
+.delete-form {
+    margin: 0;
+}
+
+.delete-btn {
+    background: none;
+    border: 1px solid #e74c3c;
+    color: #e74c3c;
+    font-size: 0.85rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s, color 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.delete-btn:hover {
+    background-color: #e74c3c;
+    color: white;
+}
+
+/*    Replies Section   */
 .replies {
     margin-top: 15px;
     padding-top: 10px;
     border-top: 1px solid #eee;
     background-color: #f9f9f9;
-    padding: 10px;
+    padding: 12px;
     border-radius: 4px;
+}
+
+.reply-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.reply-item:last-of-type {
+    border-bottom: none;
+}
+
+.reply-item p {
+    margin: 4px 0 2px;
+    font-size: 0.92rem;
+    color: #444;
+}
+
+.no-replies {
+    color: #b0b0b0;
+    font-style: italic;
+    font-size: 0.88rem;
+    margin: 0 0 8px;
+}
+
+/*    Inline Reply Form    */
+.reply-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.reply-form .reply-input {
+    flex: 1;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.reply-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.85rem;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.reply-btn:hover {
+    background-color: #2980b9;
 }

@@ -1,6 +1,4 @@
 <?php
-// FIX: index.php is now PUBLIC — no forced redirect.
-// It shows Join/Sign In buttons for guests, and username+Logout for logged-in members.
 session_start();
 $isLoggedIn = isset($_SESSION['username']);
 ?>
@@ -24,15 +22,15 @@ $isLoggedIn = isset($_SESSION['username']);
             <?php if ($isLoggedIn): ?>
                 <li><a href="discussions.php">Discussions</a></li>
                 <li><a href="events.php">Events</a></li>
-                <li id="nav-user-info" style="display:flex;align-items:center;gap:10px;">
-                    <span class="nav-username">Welcome, <?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
+                <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
+                    <span id="nav-user-name" class="nav-username"><?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
                     <a href="logout.php"><button class="logout-btn">Logout</button></a>
                 </li>
             <?php else: ?>
-                <li><a href="discussions.html">Discussions</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><button class="join-btn"   onclick="joinClub()">Join Club</button></li>
-                <li><button class="sign-in-btn" onclick="signIn()">Sign In</button></li>
+                <li><a href="discussions.php">Discussions</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li><button class="join-btn" id="nav-join-btn" onclick="joinClub()">Join Club</button></li>
+                <li><button class="sign-in-btn" id="nav-signin-btn" onclick="signIn()">Sign In</button></li>
             <?php endif; ?>
         </ul>
     </nav>
@@ -51,7 +49,7 @@ $isLoggedIn = isset($_SESSION['username']);
         </div>
     </header>
 
-    <div style="max-width:1000px;margin:40px auto;padding:0 20px;display:flex;gap:20px;">
+    <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px; display: flex; gap: 20px;">
         <div class="sidebar-widget">
             <h3>Upcoming Club Events</h3>
             <ul>
@@ -62,9 +60,18 @@ $isLoggedIn = isset($_SESSION['username']);
         <aside class="sidebar-widget">
             <h3>Members</h3>
             <ul class="member-list">
-                <li>Ullas (President)</li>
-                <li>Mr Shontu (Moderator)</li>
-                <li>Mr UB</li>
+                <?php
+                include 'db.php';
+                $members_q = "SELECT fullname, role FROM users ORDER BY FIELD(role, 'president','moderator','member'), fullname";
+                $members_r = mysqli_query($conn, $members_q);
+                while ($m = mysqli_fetch_assoc($members_r)):
+                ?>
+                    <li>
+                        <?php echo htmlspecialchars($m['fullname']); ?>
+                        <span class="role-badge <?php echo $m['role']; ?>"><?php echo ucfirst($m['role']); ?></span>
+                    </li>
+                <?php endwhile; ?>
+                <?php mysqli_close($conn); ?>
             </ul>
         </aside>
     </div>

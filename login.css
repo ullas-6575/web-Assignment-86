@@ -1,7 +1,4 @@
-/* =====================================================
-   The Innovators – login.css
-   Auth page styles with smooth box transitions
-   ===================================================== */
+/* The Innovators – login.css */
 
 .auth-container {
     display: flex;
@@ -80,21 +77,53 @@
 
 /* ── Fade-in animation for box toggle ── */
 @keyframes authFadeIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0);    }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes authFadeOut {
-    from { opacity: 1; transform: translateY(0);    }
-    to   { opacity: 0; transform: translateY(-8px); }
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
 }
 
 @keyframes msgPop {
-    0%   { transform: scale(0.95); opacity: 0; }
-    60%  { transform: scale(1.02); }
-    100% { transform: scale(1);    opacity: 1; }
+    0% {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+
+    60% {
+        transform: scale(1.02);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-.auth-fade-in  { animation: authFadeIn  0.28s ease forwards; }
-.auth-fade-out { animation: authFadeOut 0.18s ease forwards; }
-.msg-pop       { animation: msgPop      0.35s ease forwards; }
+.auth-fade-in {
+    animation: authFadeIn 0.28s ease forwards;
+}
+
+.auth-fade-out {
+    animation: authFadeOut 0.18s ease forwards;
+}
+
+.msg-pop {
+    animation: msgPop 0.35s ease forwards;
+}

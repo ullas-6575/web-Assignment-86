@@ -1,9 +1,6 @@
 <?php
 session_start();
-if (!isset($_SESSION['username'])) {
-    header("location: login.php");
-    exit();
-}
+$isLoggedIn = isset($_SESSION['username']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,12 +18,19 @@ if (!isset($_SESSION['username'])) {
         <ul class="nav-links">
             <li><a href="index.php#home">Home</a></li>
             <li><a href="index.php#about">About Us</a></li>
-            <li><a href="discussions.php">Discussions</a></li>
-            <li><a href="events.php">Events</a></li>
-            <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
-                <span id="nav-user-name" class="nav-username"><?php echo "Welcome, " . $_SESSION['fullname']; ?></span>
-                <a href="logout.php"><button class="logout-btn">Logout</button></a>
-            </li>
+            <?php if ($isLoggedIn): ?>
+                <li><a href="discussions.php">Discussions</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
+                    <span id="nav-user-name" class="nav-username">Welcome, <?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
+                    <a href="logout.php"><button class="logout-btn">Logout</button></a>
+                </li>
+            <?php else: ?>
+                <li><a href="discussions.php">Discussions</a></li>
+                <li><a href="events.php">Events</a></li>
+                <li><button class="join-btn" id="nav-join-btn" onclick="joinClub()">Join Club</button></li>
+                <li><button class="sign-in-btn" id="nav-signin-btn" onclick="signIn()">Sign In</button></li>
+            <?php endif; ?>
         </ul>
     </nav>
 
@@ -34,9 +38,8 @@ if (!isset($_SESSION['username'])) {
 
         <h1 class="events-page-title">Club Events</h1>
 
-        <!-- Upcoming / Future Events -->
         <section class="events-section" id="future-events">
-            <h2 class="events-section-title"> Upcoming Events</h2>
+            <h2 class="events-section-title">Upcoming Events</h2>
             <div class="events-grid">
                 <div class="event-card future">
                     <div class="event-date">Friday, May 2 — 8:00 PM</div>
@@ -59,29 +62,25 @@ if (!isset($_SESSION['username'])) {
             </div>
         </section>
 
-        <!-- Recent / Past Events -->
         <section class="events-section" id="recent-events">
-            <h2 class="events-section-title"> Recent Events</h2>
+            <h2 class="events-section-title">Recent Events</h2>
             <div class="events-grid">
                 <div class="event-card past">
                     <div class="event-date">Friday, April 18 — 8:00 PM</div>
                     <h3>Club Launch Celebration</h3>
-                    <p>We officially kicked off The Innovators club with a fantastic welcome night for all founding
-                        members.</p>
+                    <p>We officially kicked off The Innovators club with a fantastic welcome night for all founding members.</p>
                     <span class="event-badge past">Completed</span>
                 </div>
                 <div class="event-card past">
                     <div class="event-date">Sunday, April 13 — 11:00 AM</div>
                     <h3>Idea Brainstorm Day</h3>
-                    <p>Members gathered to brainstorm and vote on the first batch of ideas to be pitched to the club.
-                    </p>
+                    <p>Members gathered to brainstorm and vote on the first batch of ideas to be pitched to the club.</p>
                     <span class="event-badge past">Completed</span>
                 </div>
                 <div class="event-card past">
                     <div class="event-date">Saturday, April 5 — 3:00 PM</div>
                     <h3>HTML & CSS Workshop</h3>
-                    <p>Our first hands-on coding workshop helped 10+ members build their very first webpage from
-                        scratch.</p>
+                    <p>Our first hands-on coding workshop helped 10+ members build their very first webpage from scratch.</p>
                     <span class="event-badge past">Completed</span>
                 </div>
             </div>

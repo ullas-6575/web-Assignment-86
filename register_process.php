@@ -1,8 +1,5 @@
 <?php
 // register_process.php — Inserts new user into MySQL via db.php
-// FIX: replaced die() calls with proper redirects back to login.php so
-//      errors are shown inline using the restored signup-message box.
-
 include 'db.php';
 
 if (!isset($_POST['submit'])) {
@@ -15,7 +12,7 @@ $username = trim($_POST['username']);
 $email    = trim($_POST['email']);
 $password = $_POST['password'];
 
-// ── Validation ──────────────────────────────────────────────────────────────
+// Validation 
 if (empty($fullname) || empty($username) || empty($email) || empty($password)) {
     header("location: login.php?action=signup&signup_error=All+fields+are+required.");
     exit();
@@ -31,19 +28,19 @@ if (strlen($password) < 8) {
     exit();
 }
 
-// ── Escape inputs (prevents SQL injection) ──────────────────────────────────
+//  Escape inputs (prevents SQL injection) 
 $fn  = mysqli_real_escape_string($conn, $fullname);
 $un  = mysqli_real_escape_string($conn, $username);
 $em  = mysqli_real_escape_string($conn, $email);
 
-// ── Check duplicates ─────────────────────────────────────────────────────────
+//   Check duplicates 
 $check = mysqli_query($conn, "SELECT id FROM users WHERE username='$un' OR email='$em'");
 if (mysqli_num_rows($check) > 0) {
     header("location: login.php?action=signup&signup_error=Username+or+email+already+taken.");
     exit();
 }
 
-// ── Insert ───────────────────────────────────────────────────────────────────
+//  Insert 
 $hashed = password_hash($password, PASSWORD_DEFAULT);
 $q = "INSERT INTO users (fullname, username, email, password)
       VALUES ('$fn', '$un', '$em', '$hashed')";

@@ -1,6 +1,4 @@
 <?php
-// login_process.php — Authenticates user against MySQL database
-// FIX: added mysqli_real_escape_string() to prevent SQL injection
 
 session_start();
 include 'db.php';
@@ -26,6 +24,7 @@ if (mysqli_num_rows($res) == 1) {
         $_SESSION['user_id']  = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['fullname'] = $user['fullname'];
+        $_SESSION['role']     = $user['role'];
 
         // ── COOKIE ("remember me") ──
         if (isset($_POST['remember'])) {
