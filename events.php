@@ -1,6 +1,33 @@
 <?php
 session_start();
+include 'db.php';
+
 $isLoggedIn = isset($_SESSION['username']);
+$userRole = $_SESSION['role'] ?? null;
+
+$now = date('Y-m-d H:i:s');
+$upcomingEvents = [];
+$recentEvents = [];
+
+$eventsQuery = "SELECT e.*, u.fullname AS created_by_name FROM events e LEFT JOIN users u ON e.created_by = u.id ORDER BY e.event_date ASC";
+$eventsResult = mysqli_query($conn, $eventsQuery);
+if ($eventsResult) {
+    while ($event = mysqli_fetch_assoc($eventsResult)) {
+        if ($event['event_date'] >= $now) {
+            $upcomingEvents[] = $event;
+        } else {
+            array_unshift($recentEvents, $event);
+        }
+    }
+    mysqli_free_result($eventsResult);
+}
+
+mysqli_close($conn);
+
+function formatEventDate($dateTime)
+{
+    return date('l, F j — g:i A', strtotime($dateTime));
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,51 +65,69 @@ $isLoggedIn = isset($_SESSION['username']);
 
         <h1 class="events-page-title">Club Events</h1>
 
+        <?php if ($userRole === 'president'): ?>
+            <section class="events-section event-form-section">
+                <h2 class="events-section-title">Create New Event</h2>
+                <?php if (isset($_GET['success']) && $_GET['success'] === '1'): ?>
+                    <p style="color:#27ae60;">Event created successfully.</p>
+                <?php elseif (isset($_GET['error'])): ?>
+                    <p style="color:#e74c3c;"><?php echo htmlspecialchars($_GET['error']); ?></p>
+                <?php endif; ?>
+                <form class="event-form" method="POST" action="post_event.php">
+                    <label>
+                        Title
+                        <input type="text" name="title" required placeholder="Event title">
+                    </label>
+                    <label>
+                        Description
+                        <textarea name="description" required placeholder="Event description"></textarea>
+                    </label>
+                    <label>
+                        Date & Time
+                        <input type="datetime-local" name="event_date" required>
+                    </label>
+                    <button type="submit" name="submit" class="post-btn">Save Event</button>
+                </form>
+            </section>
+        <?php endif; ?>
+
         <section class="events-section" id="future-events">
             <h2 class="events-section-title">Upcoming Events</h2>
             <div class="events-grid">
-                <div class="event-card future">
-                    <div class="event-date">Friday, May 2 — 8:00 PM</div>
-                    <h3>Monthly Meetup</h3>
-                    <p>Join us for our monthly social mixer! Meet new members, share ideas, and have fun.</p>
-                    <span class="event-badge upcoming">Upcoming</span>
-                </div>
-                <div class="event-card future">
-                    <div class="event-date">Sunday, May 4 — 10:00 AM</div>
-                    <h3>Pitch Review Session</h3>
-                    <p>Members will present their ideas to the club and receive constructive feedback from peers.</p>
-                    <span class="event-badge upcoming">Upcoming</span>
-                </div>
-                <div class="event-card future">
-                    <div class="event-date">Saturday, May 10 — 2:00 PM</div>
-                    <h3>Intro to Web Development</h3>
-                    <p>A beginner-friendly workshop covering the basics of HTML, CSS, and JavaScript.</p>
-                    <span class="event-badge upcoming">Upcoming</span>
-                </div>
+                <?php if (count($upcomingEvents) === 0): ?>
+                    <div class="event-card">
+                        <p>No upcoming events are scheduled yet.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($upcomingEvents as $event): ?>
+                        <div class="event-card future">
+                            <div class="event-date"><?php echo htmlspecialchars(formatEventDate($event['event_date'])); ?></div>
+                            <h3><?php echo htmlspecialchars($event['title']); ?></h3>
+                            <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
+                            <span class="event-badge upcoming">Upcoming</span>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </section>
 
         <section class="events-section" id="recent-events">
             <h2 class="events-section-title">Recent Events</h2>
             <div class="events-grid">
-                <div class="event-card past">
-                    <div class="event-date">Friday, April 18 — 8:00 PM</div>
-                    <h3>Club Launch Celebration</h3>
-                    <p>We officially kicked off The Innovators club with a fantastic welcome night for all founding members.</p>
-                    <span class="event-badge past">Completed</span>
-                </div>
-                <div class="event-card past">
-                    <div class="event-date">Sunday, April 13 — 11:00 AM</div>
-                    <h3>Idea Brainstorm Day</h3>
-                    <p>Members gathered to brainstorm and vote on the first batch of ideas to be pitched to the club.</p>
-                    <span class="event-badge past">Completed</span>
-                </div>
-                <div class="event-card past">
-                    <div class="event-date">Saturday, April 5 — 3:00 PM</div>
-                    <h3>HTML & CSS Workshop</h3>
-                    <p>Our first hands-on coding workshop helped 10+ members build their very first webpage from scratch.</p>
-                    <span class="event-badge past">Completed</span>
-                </div>
+                <?php if (count($recentEvents) === 0): ?>
+                    <div class="event-card">
+                        <p>No recent events have been completed yet.</p>
+                    </div>
+                <?php else: ?>
+                    <?php foreach ($recentEvents as $event): ?>
+                        <div class="event-card past">
+                            <div class="event-date"><?php echo htmlspecialchars(formatEventDate($event['event_date'])); ?></div>
+                            <h3><?php echo htmlspecialchars($event['title']); ?></h3>
+                            <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
+                            <span class="event-badge past">Completed</span>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </section>
 

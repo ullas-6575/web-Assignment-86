@@ -296,6 +296,33 @@ html {
     border: 1px solid #bbb;
 }
 
+.event-form {
+    display: grid;
+    gap: 15px;
+    max-width: 620px;
+    margin-bottom: 30px;
+}
+
+.event-form label {
+    display: block;
+    font-weight: 600;
+    color: #34495e;
+}
+
+.event-form input,
+.event-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.event-form textarea {
+    min-height: 120px;
+}
+
 /* Cards & Widgets */
 .new-idea-section,
 .idea-card,

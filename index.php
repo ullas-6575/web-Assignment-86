@@ -71,6 +71,28 @@ $isLoggedIn = isset($_SESSION['username']);
                         <span class="role-badge <?php echo $m['role']; ?>"><?php echo ucfirst($m['role']); ?></span>
                     </li>
                 <?php endwhile; ?>
+            </ul>
+        </aside>
+
+        <aside class="sidebar-widget">
+            <h3>Upcoming Club Events</h3>
+            <ul class="member-list">
+                <?php
+                $events_q = "SELECT title, event_date FROM events WHERE event_date >= NOW() ORDER BY event_date ASC LIMIT 5";
+                $events_r = mysqli_query($conn, $events_q);
+                if ($events_r && mysqli_num_rows($events_r) > 0):
+                    while ($event = mysqli_fetch_assoc($events_r)):
+                ?>
+                    <li>
+                        <strong><?php echo htmlspecialchars(date('D, M j', strtotime($event['event_date']))); ?>:</strong>
+                        <?php echo htmlspecialchars($event['title']); ?>
+                    </li>
+                <?php
+                    endwhile;
+                else:
+                ?>
+                    <li>No upcoming events are scheduled.</li>
+                <?php endif; ?>
                 <?php mysqli_close($conn); ?>
             </ul>
         </aside>
