@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS innovators_db;
+USE innovators_db;
+
 CREATE TABLE IF NOT EXISTS users (
   id       INT AUTO_INCREMENT PRIMARY KEY,
   fullname VARCHAR(255) NOT NULL,
@@ -39,5 +42,5 @@ CREATE TABLE IF NOT EXISTS events (
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
 
-UPDATE users SET role = 'president' WHERE username = 'ullas';
-UPDATE users SET role = 'moderator' WHERE username = 'shontu';
+-- UPDATE users SET role = 'president' WHERE username = 'ullas';
+-- UPDATE users SET role = 'moderator' WHERE username = 'shontu';

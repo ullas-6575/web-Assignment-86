@@ -13,7 +13,7 @@ $disc_q = "SELECT d.id, d.title, d.body, d.created,
            ORDER BY d.created DESC";
 $disc_result = mysqli_query($conn, $disc_q);
 
-//  Fetch all replies keyed by discussion_id 
+// Fetch all replies keyed by discussion_id 
 $reply_q = "SELECT r.id, r.discussion_id, r.body, r.created,
                    u.fullname AS author_name, u.username AS author_username, u.role AS author_role
             FROM replies r
@@ -26,6 +26,7 @@ if ($reply_result) {
     while ($r = mysqli_fetch_assoc($reply_result)) {
         $replies[$r['discussion_id']][] = $r;
     }
+    mysqli_free_result($reply_result);
 }
 ?>
 <!DOCTYPE html>
@@ -49,7 +50,7 @@ if ($reply_result) {
                 <li><a href="discussions.php">Discussions</a></li>
                 <li><a href="events.php">Events</a></li>
                 <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
-                    <span id="nav-user-name" class="nav-username">Welcome, <?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
+                    <span id="nav-user-name" class="nav-username"><?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
                     <a href="logout.php"><button class="logout-btn">Logout</button></a>
                 </li>
             <?php else: ?>
@@ -91,61 +92,62 @@ if ($reply_result) {
 
                 <?php if (!$disc_result || mysqli_num_rows($disc_result) === 0): ?>
                     <p class="empty-board">No ideas pitched yet. Be the first!</p>
-                <?php endif; ?>
-
-                <?php while ($disc = mysqli_fetch_assoc($disc_result)): ?>
-                    <div class="idea-card" id="discussion-<?php echo $disc['id']; ?>">
-                        <div class="idea-card-header">
-                            <div class="member-author">
-                                <?php echo htmlspecialchars($disc['author_name']); ?>
-                                <span class="role-badge <?php echo $disc['author_role']; ?>">
-                                    <?php echo ucfirst($disc['author_role']); ?>
-                                </span>
+                <?php else: ?>
+                    <?php while ($disc = mysqli_fetch_assoc($disc_result)): ?>
+                        <div class="idea-card" id="discussion-<?php echo $disc['id']; ?>">
+                            <div class="idea-card-header">
+                                <div class="member-author">
+                                    <?php echo htmlspecialchars($disc['author_name']); ?>
+                                    <span class="role-badge <?php echo htmlspecialchars($disc['author_role']); ?>">
+                                        <?php echo ucfirst(htmlspecialchars($disc['author_role'])); ?>
+                                    </span>
+                                </div>
+                                <?php if ($userRole === 'moderator' || $userRole === 'president'): ?>
+                                    <form method="POST" action="delete_discussion.php" class="delete-form"
+                                          onsubmit="return confirm('Delete this discussion and all its replies?');">
+                                        <input type="hidden" name="discussion_id" value="<?php echo $disc['id']; ?>">
+                                        <button type="submit" class="delete-btn" title="Delete discussion">✕</button>
+                                    </form>
+                                <?php endif; ?>
                             </div>
-                            <?php if ($userRole === 'moderator' || $userRole === 'president'): ?>
-                                <form method="POST" action="delete_discussion.php" class="delete-form"
-                                      onsubmit="return confirm('Delete this discussion and all its replies?');">
-                                    <input type="hidden" name="discussion_id" value="<?php echo $disc['id']; ?>">
-                                    <button type="submit" class="delete-btn" title="Delete discussion">✕</button>
-                                </form>
-                            <?php endif; ?>
-                        </div>
-                        <h3><?php echo htmlspecialchars($disc['title']); ?></h3>
-                        <p><?php echo nl2br(htmlspecialchars($disc['body'])); ?></p>
-                        <span class="idea-timestamp"><?php echo date('M j, Y \a\t g:i A', strtotime($disc['created'])); ?></span>
+                            <h3><?php echo htmlspecialchars($disc['title']); ?></h3>
+                            <p><?php echo nl2br(htmlspecialchars($disc['body'])); ?></p>
+                            <span class="idea-timestamp"><?php echo date('M j, Y \a\t g:i A', strtotime($disc['created'])); ?></span>
 
-                        <div class="replies">
-                            <?php if (isset($replies[$disc['id']])): ?>
-                                <?php foreach ($replies[$disc['id']] as $reply): ?>
-                                    <div class="reply-item">
-                                        <strong>
-                                            <?php echo htmlspecialchars($reply['author_name']); ?>
-                                            <span class="role-badge <?php echo $reply['author_role']; ?>">
-                                                <?php echo ucfirst($reply['author_role']); ?>
-                                            </span>
-                                        </strong>
-                                        <p><?php echo nl2br(htmlspecialchars($reply['body'])); ?></p>
-                                        <span class="reply-timestamp"><?php echo date('M j, Y \a\t g:i A', strtotime($reply['created'])); ?></span>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p class="no-replies">No replies yet.</p>
-                            <?php endif; ?>
+                            <div class="replies">
+                                <?php if (isset($replies[$disc['id']])): ?>
+                                    <?php foreach ($replies[$disc['id']] as $reply): ?>
+                                        <div class="reply-item">
+                                            <strong>
+                                                <?php echo htmlspecialchars($reply['author_name']); ?>
+                                                <span class="role-badge <?php echo htmlspecialchars($reply['author_role']); ?>">
+                                                    <?php echo ucfirst(htmlspecialchars($reply['author_role'])); ?>
+                                                </span>
+                                            </strong>
+                                            <p><?php echo nl2br(htmlspecialchars($reply['body'])); ?></p>
+                                            <span class="reply-timestamp"><?php echo date('M j, Y \a\t g:i A', strtotime($reply['created'])); ?></span>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p class="no-replies">No replies yet.</p>
+                                <?php endif; ?>
 
-                            <?php if ($isLoggedIn): ?>
-                                <form method="POST" action="post_reply.php" class="reply-form">
-                                    <input type="hidden" name="discussion_id" value="<?php echo $disc['id']; ?>">
-                                    <input type="text" name="body" placeholder="Write a reply..." required class="reply-input">
-                                    <button type="submit" class="reply-btn">Reply</button>
-                                </form>
-                            <?php else: ?>
-                                <p style="font-size: 0.85rem; color: #777; margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px;">
-                                    Please <a href="#" onclick="signIn()" style="color: #3498db; text-decoration: underline;">sign in</a> to participate in the thread.
-                                </p>
-                            <?php endif; ?>
+                                <?php if ($isLoggedIn): ?>
+                                    <form method="POST" action="post_reply.php" class="reply-form">
+                                        <input type="hidden" name="discussion_id" value="<?php echo $disc['id']; ?>">
+                                        <input type="text" name="body" placeholder="Write a reply..." required class="reply-input">
+                                        <button type="submit" class="reply-btn">Reply</button>
+                                    </form>
+                                <?php else: ?>
+                                    <p style="font-size: 0.85rem; color: #777; margin-top: 10px; border-top: 1px solid #eee; padding-top: 8px;">
+                                        Please <a href="#" onclick="signIn()" style="color: #3498db; text-decoration: underline;">sign in</a> to participate in the thread.
+                                    </p>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
-                <?php endwhile; ?>
+                    <?php endwhile; ?>
+                    <?php mysqli_free_result($disc_result); ?>
+                <?php endif; ?>
 
             </section>
         </main>

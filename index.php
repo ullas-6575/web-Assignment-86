@@ -39,9 +39,9 @@ $isLoggedIn = isset($_SESSION['username']);
         <div class="hero-box">
             <h1>Welcome to our community.</h1>
             <h1 class="huge-text">
-                .THINK<br>
-                <span>.CREATE.</span><br>
-                .INNOVATE
+                THINK<br>
+                <span>CREATE</span><br>
+                INNOVATE
             </h1>
             <h3>Every great innovation starts with a single idea.</h3>
             <p>A space where ideas are not judged, but nurtured. Share your thoughts, challenge perspectives, and
@@ -49,57 +49,54 @@ $isLoggedIn = isset($_SESSION['username']);
         </div>
     </header>
 
-    <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px; display: flex; gap: 20px;">
-        <div class="sidebar-widget">
-            <h3>Upcoming Club Events</h3>
-            <ul>
-                <li><strong>Friday, 8PM:</strong> Monthly meetup</li>
-                <li><strong>Sunday, 10AM:</strong> Pitch Review</li>
-            </ul>
-        </div>
-        <aside class="sidebar-widget">
-            <h3>Members</h3>
-            <ul class="member-list">
-                <?php
-                include 'db.php';
-                $members_q = "SELECT fullname, role FROM users ORDER BY FIELD(role, 'president','moderator','member'), fullname";
-                $members_r = mysqli_query($conn, $members_q);
+    <aside class="sidebar-widget">
+        <h3>Members</h3>
+        <ul class="member-list">
+            <?php
+            include 'db.php';
+            $members_q = "SELECT fullname, role FROM users ORDER BY FIELD(role, 'president','moderator','member'), fullname";
+            $members_r = mysqli_query($conn, $members_q);
+            if ($members_r && mysqli_num_rows($members_r) > 0):
                 while ($m = mysqli_fetch_assoc($members_r)):
-                ?>
-                    <li>
-                        <?php echo htmlspecialchars($m['fullname']); ?>
-                        <span class="role-badge <?php echo $m['role']; ?>"><?php echo ucfirst($m['role']); ?></span>
-                    </li>
-                <?php endwhile; ?>
-            </ul>
-        </aside>
+            ?>
+                <li>
+                    <?php echo htmlspecialchars($m['fullname']); ?>
+                    <span class="role-badge <?php echo htmlspecialchars($m['role']); ?>"><?php echo ucfirst(htmlspecialchars($m['role'])); ?></span>
+                </li>
+            <?php
+                endwhile;
+            else:
+            ?>
+                <li>No members yet.</li>
+            <?php endif; ?>
+        </ul>
+    </aside>
 
-        <aside class="sidebar-widget">
-            <h3>Upcoming Club Events</h3>
-            <ul class="member-list">
-                <?php
-                $events_q = "SELECT title, event_date FROM events WHERE event_date >= NOW() ORDER BY event_date ASC LIMIT 5";
-                $events_r = mysqli_query($conn, $events_q);
-                if ($events_r && mysqli_num_rows($events_r) > 0):
-                    while ($event = mysqli_fetch_assoc($events_r)):
-                ?>
-                    <li>
-                        <strong><?php echo htmlspecialchars(date('D, M j', strtotime($event['event_date']))); ?>:</strong>
-                        <?php echo htmlspecialchars($event['title']); ?>
-                    </li>
-                <?php
-                    endwhile;
-                else:
-                ?>
-                    <li>No upcoming events are scheduled.</li>
-                <?php endif; ?>
-                <?php mysqli_close($conn); ?>
-            </ul>
-        </aside>
-    </div>
+    <aside class="sidebar-widget">
+        <h3>Upcoming Club Events</h3>
+        <ul class="member-list">
+            <?php
+            $events_q = "SELECT title, event_date FROM events WHERE event_date >= NOW() ORDER BY event_date ASC LIMIT 5";
+            $events_r = mysqli_query($conn, $events_q);
+            if ($events_r && mysqli_num_rows($events_r) > 0):
+                while ($event = mysqli_fetch_assoc($events_r)):
+            ?>
+                <li>
+                    <strong><?php echo htmlspecialchars(date('D, M j', strtotime($event['event_date']))); ?>:</strong>
+                    <?php echo htmlspecialchars($event['title']); ?>
+                </li>
+            <?php
+                endwhile;
+            else:
+            ?>
+                <li>No upcoming events are scheduled.</li>
+            <?php endif; ?>
+            <?php mysqli_close($conn); ?>
+        </ul>
+    </aside>
 
     <section class="about-section" id="about">
-        <div class="about-box">
+        <div class="about-box">  
             <h2>About Us</h2>
             <p>Welcome to <strong>The Innovators</strong>! We are a community driven by creativity and the desire to
                 build new things. Our club provides a safe and supportive space for members to pitch ideas, collaborate
