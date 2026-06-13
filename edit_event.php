@@ -12,6 +12,7 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'president') {
     exit();
 }
 
+
 $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
 $title = trim($_POST['title'] ?? '');
 $description = trim($_POST['description'] ?? '');
@@ -35,7 +36,6 @@ if (!$eventDate) {
 
 $event_date = $eventDate->format('Y-m-d H:i:s');
 
-// Use prepared statement to prevent SQL injection
 $stmt = mysqli_prepare($conn, "UPDATE events SET title = ?, description = ?, event_date = ? WHERE id = ?");
 mysqli_stmt_bind_param($stmt, 'sssi', $title, $description, $event_date, $id);
 

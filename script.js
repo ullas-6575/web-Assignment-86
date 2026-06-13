@@ -47,7 +47,7 @@ function showMessage(elementId, text, isError) {
 }
 
 window.onload = function () {
-    /*  URL param: open signup box directly  */
+    /*   open signup box directly  */
     var urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('action') === 'signup') {
         var loginBox = document.getElementById('login-box');

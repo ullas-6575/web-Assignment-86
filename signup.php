@@ -1,6 +1,4 @@
 <?php
-// signup.php — Stores new user info in users.json
-
 header('Content-Type: application/json');
 
 // Only accept POST requests

@@ -41,6 +41,3 @@ CREATE TABLE IF NOT EXISTS events (
   created     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
 );
-
--- UPDATE users SET role = 'president' WHERE username = 'ullas';
--- UPDATE users SET role = 'moderator' WHERE username = 'shontu';

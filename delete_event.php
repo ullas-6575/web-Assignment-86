@@ -18,7 +18,6 @@ if ($id <= 0) {
     exit();
 }
 
-// Use prepared statement to prevent SQL injection
 $stmt = mysqli_prepare($conn, "DELETE FROM events WHERE id = ? LIMIT 1");
 mysqli_stmt_bind_param($stmt, 'i', $id);
 

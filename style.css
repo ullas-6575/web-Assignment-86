@@ -323,6 +323,71 @@ html {
     min-height: 120px;
 }
 
+.nav-user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cancel-link {
+    margin-left: 10px;
+    color: #7f8c8d;
+    text-decoration: none;
+}
+
+.cancel-link:hover {
+    text-decoration: underline;
+}
+
+.event-actions {
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.event-actions-link,
+.event-action-button {
+    color: #3498db;
+    text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.event-actions-separator {
+    margin: 0 8px;
+    color: #7f8c8d;
+}
+
+.event-action-button {
+    color: #e74c3c;
+}
+
+.event-actions-form {
+    display: inline;
+}
+
+.see-all-link {
+    display: inline-block;
+    margin-top: 8px;
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.see-all-link:hover {
+    text-decoration: underline;
+}
+
+.sidebar-widgets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
 /* Cards & Widgets */
 .new-idea-section,
 .idea-card,

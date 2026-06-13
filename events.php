@@ -9,7 +9,7 @@ $now = date('Y-m-d H:i:s');
 $upcomingEvents = [];
 $recentEvents = [];
 
-$eventsQuery = "SELECT e.*, u.fullname AS created_by_name FROM events e LEFT JOIN users u ON e.created_by = u.id ORDER BY e.event_date ASC";
+$eventsQuery = "SELECT * FROM events ORDER BY event_date ASC";
 $eventsResult = mysqli_query($conn, $eventsQuery);
 if ($eventsResult) {
     while ($event = mysqli_fetch_assoc($eventsResult)) {
@@ -35,7 +35,16 @@ if ($editId > 0 && $userRole === 'president') {
     mysqli_stmt_close($stmt);
 }
 
-mysqli_close($conn);
+$successMessage = '';
+$errorMessage = '';
+if (isset($_GET['success'])) {
+    $status = htmlspecialchars($_GET['success']);
+    $successMessage = $status === '1'
+        ? 'Event created successfully.'
+        : "Event $status successfully.";
+} elseif (isset($_GET['error'])) {
+    $errorMessage = 'Error: ' . htmlspecialchars($_GET['error']);
+}
 
 function formatEventDate($dateTime)
 {
@@ -61,7 +70,7 @@ function formatEventDate($dateTime)
             <?php if ($isLoggedIn): ?>
                 <li><a href="discussions.php">Discussions</a></li>
                 <li><a href="events.php">Events</a></li>
-                <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
+                <li id="nav-user-info" class="nav-user-info">
                     <span id="nav-user-name" class="nav-username"><?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
                     <a href="logout.php"><button class="logout-btn">Logout</button></a>
                 </li>
@@ -97,7 +106,7 @@ function formatEventDate($dateTime)
                             <input type="datetime-local" name="event_date" required value="<?php $dt = DateTime::createFromFormat('Y-m-d H:i:s', $editingEvent['event_date']); echo $dt ? htmlspecialchars($dt->format('Y-m-d\TH:i')) : ''; ?>">
                         </label>
                         <button type="submit" name="submit" class="post-btn">Update Event</button>
-                        <a href="events.php" style="margin-left: 10px; color: #7f8c8d; text-decoration: none;">Cancel</a>
+                        <a href="events.php" class="cancel-link">Cancel</a>
                     </form>
                 <?php else: ?>
                     <h2 class="events-section-title">Create New Event</h2>
@@ -120,17 +129,14 @@ function formatEventDate($dateTime)
             </section>
         <?php endif; ?>
 
-        <?php if (isset($_GET['success'])): ?>
-            <p style="color:#27ae60; background:#e0ffe0; padding:10px; border-radius:4px; margin: 10px 0;">
-                <?php 
-                    $s = htmlspecialchars($_GET['success']);
-                    echo ($s === '1' ? 'Event created' : 'Event ' . $s) . ' successfully.';
-                ?>
-            </p>
-        <?php elseif (isset($_GET['error'])): ?>
-            <p style="color:#e74c3c; background:#ffe0e0; padding:10px; border-radius:4px; margin: 10px 0;">
-                Error: <?php echo htmlspecialchars($_GET['error']); ?>
-            </p>
+        <?php if ($successMessage): ?>
+            <div class="flash-msg flash-success">
+                <?php echo $successMessage; ?>
+            </div>
+        <?php elseif ($errorMessage): ?>
+            <div class="flash-msg flash-error">
+                <?php echo $errorMessage; ?>
+            </div>
         <?php endif; ?>
 
         <section class="events-section" id="future-events">
@@ -148,12 +154,12 @@ function formatEventDate($dateTime)
                             <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
                             <span class="event-badge upcoming">Upcoming</span>
                             <?php if ($userRole === 'president'): ?>
-                                <div style="margin-top: 10px; font-size: 0.9em;">
-                                    <a href="events.php?edit=<?php echo intval($event['id']); ?>" style="color: #3498db; text-decoration: none;">Edit</a>
-                                    |
-                                    <form method="POST" action="delete_event.php" style="display:inline; margin:0; padding:0;">
+                                <div class="event-actions">
+                                    <a href="events.php?edit=<?php echo intval($event['id']); ?>" class="event-actions-link">Edit</a>
+                                    <span class="event-actions-separator">|</span>
+                                    <form method="POST" action="delete_event.php" class="event-actions-form">
                                         <input type="hidden" name="id" value="<?php echo intval($event['id']); ?>">
-                                        <button type="submit" onclick="return confirm('Delete this event?')" style="background:none;border:none;color:#e74c3c;cursor:pointer;text-decoration:none;">Delete</button>
+                                        <button type="submit" class="event-action-button delete-button" onclick="return confirm('Delete this event?')">Delete</button>
                                     </form>
                                 </div>
                             <?php endif; ?>
@@ -178,18 +184,21 @@ function formatEventDate($dateTime)
                             <p><?php echo nl2br(htmlspecialchars($event['description'])); ?></p>
                             <span class="event-badge past">Completed</span>
                             <?php if ($userRole === 'president'): ?>
-                                <div style="margin-top: 10px; font-size: 0.9em;">
-                                    <a href="events.php?edit=<?php echo intval($event['id']); ?>" style="color: #3498db; text-decoration: none;">Edit</a>
-                                    |
-                                    <form method="POST" action="delete_event.php" style="display:inline; margin:0; padding:0;">
+                                <div class="event-actions">
+                                    <a href="events.php?edit=<?php echo intval($event['id']); ?>" class="event-actions-link">Edit</a>
+                                    <span class="event-actions-separator">|</span>
+                                    <form method="POST" action="delete_event.php" class="event-actions-form">
                                         <input type="hidden" name="id" value="<?php echo intval($event['id']); ?>">
-                                        <button type="submit" onclick="return confirm('Delete this event?')" style="background:none;border:none;color:#e74c3c;cursor:pointer;text-decoration:none;">Delete</button>
+                                        <button type="submit" class="event-action-button delete-button" onclick="return confirm('Delete this event?')">Delete</button>
                                     </form>
                                 </div>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
+            </div>
+        </section>
+
             </div>
         </section>
 

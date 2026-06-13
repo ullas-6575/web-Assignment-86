@@ -22,7 +22,7 @@ $isLoggedIn = isset($_SESSION['username']);
             <?php if ($isLoggedIn): ?>
                 <li><a href="discussions.php">Discussions</a></li>
                 <li><a href="events.php">Events</a></li>
-                <li id="nav-user-info" style="display: flex; align-items: center; gap: 10px;">
+                <li id="nav-user-info" class="nav-user-info">
                     <span id="nav-user-name" class="nav-username"><?php echo htmlspecialchars($_SESSION['fullname']); ?></span>
                     <a href="logout.php"><button class="logout-btn">Logout</button></a>
                 </li>
@@ -49,51 +49,56 @@ $isLoggedIn = isset($_SESSION['username']);
         </div>
     </header>
 
-    <aside class="sidebar-widget">
-        <h3>Members</h3>
-        <ul class="member-list">
-            <?php
-            include 'db.php';
-            $members_q = "SELECT fullname, role FROM users ORDER BY FIELD(role, 'president','moderator','member'), fullname";
-            $members_r = mysqli_query($conn, $members_q);
-            if ($members_r && mysqli_num_rows($members_r) > 0):
-                while ($m = mysqli_fetch_assoc($members_r)):
-            ?>
-                <li>
-                    <?php echo htmlspecialchars($m['fullname']); ?>
-                    <span class="role-badge <?php echo htmlspecialchars($m['role']); ?>"><?php echo ucfirst(htmlspecialchars($m['role'])); ?></span>
-                </li>
-            <?php
-                endwhile;
-            else:
-            ?>
-                <li>No members yet.</li>
-            <?php endif; ?>
-        </ul>
-    </aside>
+    <?php include 'db.php';
+    $members_q = "SELECT fullname, role FROM users ORDER BY FIELD(role, 'president','moderator','member'), fullname LIMIT 5";
+    $members_r = mysqli_query($conn, $members_q);
+    $members_count_r = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM users");
+    $members_count = ($members_count_r && $mc = mysqli_fetch_assoc($members_count_r)) ? intval($mc['cnt']) : 0;
 
-    <aside class="sidebar-widget">
-        <h3>Upcoming Club Events</h3>
-        <ul class="member-list">
-            <?php
-            $events_q = "SELECT title, event_date FROM events WHERE event_date >= NOW() ORDER BY event_date ASC LIMIT 5";
-            $events_r = mysqli_query($conn, $events_q);
-            if ($events_r && mysqli_num_rows($events_r) > 0):
-                while ($event = mysqli_fetch_assoc($events_r)):
-            ?>
-                <li>
-                    <strong><?php echo htmlspecialchars(date('D, M j', strtotime($event['event_date']))); ?>:</strong>
-                    <?php echo htmlspecialchars($event['title']); ?>
-                </li>
-            <?php
-                endwhile;
-            else:
-            ?>
-                <li>No upcoming events are scheduled.</li>
-            <?php endif; ?>
-            <?php mysqli_close($conn); ?>
-        </ul>
-    </aside>
+    $events_q = "SELECT title, event_date FROM events WHERE event_date >= NOW() ORDER BY event_date ASC LIMIT 5";
+    $events_r = mysqli_query($conn, $events_q);
+    $events_count_r = mysqli_query($conn, "SELECT COUNT(*) AS cnt FROM events WHERE event_date >= NOW()");
+    $events_count = ($events_count_r && $ec = mysqli_fetch_assoc($events_count_r)) ? intval($ec['cnt']) : 0;
+    ?>
+
+    <div style="max-width: 1000px; margin: 40px auto; padding: 0 20px; display: flex; gap: 20px;">
+        <aside class="sidebar-widget">
+            <h3>Upcoming Club Events</h3>
+            <ul class="member-list">
+                <?php if ($events_r && mysqli_num_rows($events_r) > 0):
+                    while ($event = mysqli_fetch_assoc($events_r)): ?>
+                    <li>
+                        <strong><?php echo htmlspecialchars(date('D, M j', strtotime($event['event_date']))); ?>:</strong>
+                        <?php echo htmlspecialchars($event['title']); ?>
+                    </li>
+                <?php endwhile; else: ?>
+                    <li>No upcoming events are scheduled.</li>
+                <?php endif; ?>
+                <?php if ($events_count > 5): ?>
+                    <li><a href="events.php#future-events" class="see-all-link">See all events</a></li>
+                <?php endif; ?>
+            </ul>
+        </aside>
+
+        <aside class="sidebar-widget">
+            <h3>Members</h3>
+            <ul class="member-list">
+                <?php if ($members_r && mysqli_num_rows($members_r) > 0):
+                    while ($m = mysqli_fetch_assoc($members_r)): ?>
+                    <li>
+                        <?php echo htmlspecialchars($m['fullname']); ?>
+                        <span class="role-badge <?php echo htmlspecialchars($m['role']); ?>"><?php echo ucfirst(htmlspecialchars($m['role'])); ?></span>
+                    </li>
+                <?php endwhile; else: ?>
+                    <li>No members yet.</li>
+                <?php endif; ?>
+                <?php if ($members_count > 5): ?>
+                    <li><a href="members.php" class="see-all-link">See all members</a></li>
+                <?php endif; ?>
+            </ul>
+        </aside>
+    </div>
+    <?php mysqli_close($conn); ?>
 
     <section class="about-section" id="about">
         <div class="about-box">  
